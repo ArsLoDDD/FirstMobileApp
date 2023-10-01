@@ -1,8 +1,9 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Text} from 'react-native';
+import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
 import UserAvatar from './UserAvatar/UserAvatar';
 import {useNavigation} from '@react-navigation/native';
 import {HomeScreenNavigationProp} from '../../../type.d';
+import LinearGradient from 'react-native-linear-gradient';
 
 interface IUserInfoProps {
   id: number;
@@ -19,25 +20,56 @@ const UserInfo: React.FC<IUserInfoProps> = ({id, name, email}) => {
     const params: ProfileParams = {id};
     navigation.navigate('Profile', params);
   };
+
   return (
     <TouchableOpacity style={styles.userBox} onPress={() => goToProfile()}>
-      <UserAvatar id={id} />
-      <Text>Full Name: {name}</Text>
-      <Text>User Email: {email}</Text>
+      <LinearGradient
+        colors={['hsla(116, 100%, 50%, 1) 10%', 'hsla(289, 43%, 46%, 1) 93%)']}
+        start={{x: 0.9, y: 0.9}}
+        end={{x: 0, y: 0.3}}
+        style={styles.gradient}>
+        <UserAvatar id={id} />
+        <View style={styles.textBox}>
+          <Text style={styles.textName}>Full Name:</Text>
+          <Text style={styles.text}> {name}</Text>
+        </View>
+        <View style={styles.textBox}>
+          <Text style={styles.textName}>User Email:</Text>
+          <Text style={styles.text}> {email}</Text>
+        </View>
+      </LinearGradient>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   userBox: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 20,
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 8,
+  },
+  gradient: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    width: '100%',
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    borderRadius: 8,
+  },
+  text: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  textName: {
+    fontWeight: '600',
+    fontSize: 12,
+  },
+  textBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

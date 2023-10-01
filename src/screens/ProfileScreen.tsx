@@ -22,11 +22,16 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import {useDispatch} from 'react-redux';
+import {setUser as setUserSlice} from '../redux/slices/userSlice';
+
+type User = IUser | void;
 
 const duration = 800;
 const ProfileScreen: React.FC = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const route = useRoute<RouteProp<RootStackParamList, 'Profile'>>();
+  const dispatch = useDispatch();
   const defPosition = useSharedValue(300);
 
   const anim = useAnimatedStyle(() => ({
@@ -44,10 +49,18 @@ const ProfileScreen: React.FC = () => {
 
   useEffect(() => {
     (async () => {
-      const userData = await getUserData(id);
+      const userData: User = await getUserData(id);
       setUser(userData || null);
+      if (userData) {
+        dispatch(
+          setUserSlice({
+            id: userData.id,
+            name: userData.name,
+          }),
+        );
+      }
     })();
-  }, [id]);
+  }, [id, dispatch]);
 
   return (
     <SafeAreaView style={styles.container}>
