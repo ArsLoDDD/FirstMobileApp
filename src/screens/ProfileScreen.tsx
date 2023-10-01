@@ -16,10 +16,29 @@ import SkeletonProfileScreen from '../components/Skeleton/SkeletonProfile';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import UserPosts from '../components/UserPosts';
 import {RootStackParamList} from '../../type.d';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  Easing,
+} from 'react-native-reanimated';
 
+const duration = 800;
 const ProfileScreen: React.FC = () => {
   const [user, setUser] = useState<IUser | null>(null);
   const route = useRoute<RouteProp<RootStackParamList, 'Profile'>>();
+  const defPosition = useSharedValue(300);
+
+  const anim = useAnimatedStyle(() => ({
+    transform: [{translateY: defPosition.value}],
+  }));
+
+  useEffect(() => {
+    defPosition.value = withTiming(0, {
+      duration,
+      easing: Easing.linear,
+    });
+  }, [defPosition]);
 
   const {id} = route.params;
 
@@ -48,9 +67,9 @@ const ProfileScreen: React.FC = () => {
                   <Text style={styles.text}>Company: {user.company.name}</Text>
                 </View>
               </View>
-              <View>
+              <Animated.View style={anim}>
                 <UserPosts id={id} />
-              </View>
+              </Animated.View>
             </>
           ) : (
             <SkeletonProfileScreen />

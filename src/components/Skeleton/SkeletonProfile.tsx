@@ -36,9 +36,8 @@ const SkeletonProfileScreen: React.FC = () => {
         </View>
         <View>
           {[1, 2, 3, 4].map(index => (
-            <View style={styles.userPosts}>
+            <View style={styles.userPosts} key={`${index + Math.random()}`}>
               <ShimmerPlaceholder
-                key={`${index}`}
                 style={styles.textPlaceholder}
                 shimmerColors={['#ccc', '#ddd', '#ccc']}
               />

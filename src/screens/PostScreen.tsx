@@ -6,17 +6,38 @@ import {useRoute} from '@react-navigation/native';
 import {RouteProp} from '@react-navigation/native';
 import {RootStackParamList} from '../../type.d';
 import BackButton from '../components/BackButton';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withDelay,
+} from 'react-native-reanimated';
 
 const PostScreen: React.FC = () => {
   const [post, setPost] = useState<IPost | null>(null);
   const route = useRoute<RouteProp<RootStackParamList, 'Post'>>();
   const {postId} = route.params;
+  const defOpacity = useSharedValue(0);
+  const defPosition = useSharedValue(500);
+
+  const animText = useAnimatedStyle(() => ({
+    opacity: defOpacity.value,
+  }));
+  const anim = useAnimatedStyle(() => ({
+    transform: [{translateY: defPosition.value}],
+  }));
+
+  useEffect(() => {
+    defOpacity.value = withDelay(800, withTiming(1, {duration: 800}));
+    defPosition.value = withTiming(0, {
+      duration: 800,
+    });
+  }, [defOpacity, defPosition]);
 
   useEffect(() => {
     (async () => {
-      console.log(postId, '1111');
-      const post = await getDataPost(postId);
-      setPost(post || null);
+      const postData = await getDataPost(postId);
+      setPost(postData || null);
     })();
   }, [postId]);
 
@@ -27,9 +48,11 @@ const PostScreen: React.FC = () => {
         <View style={styles.container}>
           <View style={styles.textBox}>
             <Text style={styles.title}>{post.title}</Text>
-            <View style={styles.textContainer}>
-              <Text style={styles.text}>{post.body}</Text>
-            </View>
+            <Animated.View style={[styles.textContainer, anim]}>
+              <Animated.Text style={[styles.text, animText]}>
+                {post.body}
+              </Animated.Text>
+            </Animated.View>
           </View>
         </View>
       ) : (
@@ -43,6 +66,7 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     alignItems: 'center',
+    paddingTop: 60,
   },
   textBox: {
     display: 'flex',
@@ -60,7 +84,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   textContainer: {
-    height: '70%',
     padding: 12,
     borderWidth: 1,
     borderColor: 'black',
