@@ -61,7 +61,11 @@ const PostScreen: React.FC<RootStackScreenProps<'Post'>> = ({
             <Text numberOfLines={1} style={styles.title}>
               {post.title}
             </Text>
-            <Animated.ScrollView style={[styles.textContainer, anim]}>
+            <Animated.ScrollView
+              style={[styles.textContainer, anim]}
+              contentContainerStyle={{
+                paddingBottom: 20,
+              }}>
               <Animated.Text style={[styles.text, animText]}>
                 {post.body + post.body}
               </Animated.Text>
