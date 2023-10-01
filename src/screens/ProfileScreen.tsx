@@ -12,10 +12,7 @@ import getUserData from '../api/getUserData';
 import UserAvatar from '../components/UserInfo/UserAvatar/UserAvatar';
 import BackButton from '../components/BackButton';
 import SkeletonProfileScreen from '../components/Skeleton/SkeletonProfile';
-
-import {RouteProp, useRoute} from '@react-navigation/native';
 import UserPosts from '../components/UserPosts';
-import {RootStackParamList} from '../../type.d';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -24,13 +21,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useDispatch} from 'react-redux';
 import {setUser as setUserSlice} from '../redux/slices/userSlice';
+import {RootStackScreenProps} from '../../type.d';
 
 type User = IUser | void;
 
 const duration = 800;
-const ProfileScreen: React.FC = () => {
+const ProfileScreen: React.FC<RootStackScreenProps<'Profile'>> = ({route}) => {
   const [user, setUser] = useState<IUser | null>(null);
-  const route = useRoute<RouteProp<RootStackParamList, 'Profile'>>();
   const dispatch = useDispatch();
   const defPosition = useSharedValue(300);
 

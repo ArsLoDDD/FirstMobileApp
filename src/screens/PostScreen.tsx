@@ -1,17 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import IPost from '../types/post';
 import getDataPost from '../api/getDataPost';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  SafeAreaView,
-} from 'react-native';
-import {useRoute} from '@react-navigation/native';
-import {RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from '../../type.d';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+
 import BackButton from '../components/BackButton';
 import Animated, {
   useSharedValue,
@@ -21,14 +12,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import {useTypedSelector} from '../redux/store';
 import UserAvatar from '../components/UserInfo/UserAvatar/UserAvatar';
-import {useNavigation} from '@react-navigation/native';
-import {HomeScreenNavigationProp} from '../../type.d';
+import {RootStackScreenProps} from '../../type.d';
 
-const PostScreen: React.FC = () => {
+const PostScreen: React.FC<RootStackScreenProps<'Post'>> = ({
+  route,
+  navigation,
+}) => {
   const [post, setPost] = useState<IPost | null>(null);
   const user = useTypedSelector(state => state.user);
-  const route = useRoute<RouteProp<RootStackParamList, 'Post'>>();
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+
   const {postId} = route.params;
   const defOpacity = useSharedValue(0);
   const defPosition = useSharedValue(500);

@@ -3,7 +3,8 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import getUserPosts from '../api/getUserPosts';
 import IPost from '../types/post';
 import {useNavigation} from '@react-navigation/native';
-import {HomeScreenNavigationProp} from '../../type.d';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../type.d';
 
 type UserPostsProps = {
   id: number;
@@ -14,8 +15,8 @@ type PostParams = {
 
 const UserPosts: React.FC<UserPostsProps> = ({id}) => {
   const [posts, setPosts] = useState<IPost[] | null>([]);
-  const navigate = useNavigation<HomeScreenNavigationProp>();
-
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   useEffect(() => {
     (async () => {
       const userPosts = await getUserPosts(id);
@@ -25,7 +26,7 @@ const UserPosts: React.FC<UserPostsProps> = ({id}) => {
 
   const goToPost = (postId: number) => {
     const params: PostParams = {postId};
-    navigate.navigate('Post', params);
+    navigation.navigate('Post', params);
   };
 
   return (
